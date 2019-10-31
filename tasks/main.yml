@@ -15,13 +15,6 @@
 - import_tasks: docker-1809-shim.yml
   when: ansible_service_mgr == 'systemd'
 
-- name: Create docker config
-  copy:
-    dest: "/etc/docker/daemon.json"
-    content: "{{ docker_config }}"
-  when: docker_config is defined
-  notify: restart docker
-
 - name: Ensure Docker is started and enabled at boot.
   service:
     name: docker
@@ -36,3 +29,10 @@
 
 - include_tasks: docker-users.yml
   when: docker_users
+
+- name: Create docker config
+  copy:
+    dest: "/etc/docker/daemon.json"
+    content: "{{ docker_config }}"
+  when: docker_config is defined
+  notify: restart docker
